@@ -1,0 +1,1399 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Ana Jurat García Foundation</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--black:#0a0a0a;--white:#f5f2eb;--accent:#4a7c59;--muted:#8a8a7a;--border:#1e1e1e;}
+html{scroll-behavior:smooth;}
+
+/* CURSOR */
+.cursor{position:fixed;width:12px;height:12px;background:var(--white);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:difference;}
+.cursor-ring{position:fixed;width:40px;height:40px;border:1px solid rgba(245,242,235,0.4);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width 0.2s,height 0.2s,opacity 0.2s;}
+.cursor-ring.hover{width:64px;height:64px;opacity:0.6;}
+body,a,button{cursor:none;}
+body{background:var(--black);color:var(--white);font-family:'Inter',sans-serif;font-size:16px;line-height:1.6;overflow-x:hidden;}
+
+/* ═══════════════════════════════
+   PARALLAX BACKGROUND SYSTEM
+═══════════════════════════════ */
+.bg-parallax{
+  position:fixed;inset:0;z-index:0;
+  overflow:hidden;
+}
+/* Each bg layer */
+.bg-layer{
+  position:absolute;inset:-15%;
+  background-size:cover;background-position:center;
+  will-change:transform;
+  transition:transform 0.1s linear;
+}
+/* Layer 1 — primary landscape (darkened heavily) */
+.bg-layer-1{
+  background-image:url('https://pplx-res.cloudinary.com/image/upload/pplx_search_images/1397401d1e70d521cf00260500f3fa62b0202c84.jpg');
+  filter:grayscale(100%) brightness(0.08) contrast(1.2);
+  z-index:1;
+}
+/* Layer 2 — butterfly meadow overlay, very subtle */
+.bg-layer-2{
+  background-image:url('https://pplx-res.cloudinary.com/image/upload/pplx_search_images/331857b49311c1a5f4732846a4a7561768b3879d.jpg');
+  filter:grayscale(100%) brightness(0.06) contrast(1.3);
+  z-index:2;
+  opacity:0.6;
+  mix-blend-mode:screen;
+}
+/* Vignette */
+.bg-vignette{
+  position:absolute;inset:0;z-index:3;pointer-events:none;
+  background:radial-gradient(ellipse at center, transparent 30%, rgba(10,10,10,0.85) 100%);
+}
+/* Accent green glow */
+.bg-glow{
+  position:absolute;inset:0;z-index:4;pointer-events:none;
+  background:
+    radial-gradient(ellipse at 70% 30%, rgba(74,124,89,0.12) 0%, transparent 50%),
+    radial-gradient(ellipse at 20% 80%, rgba(74,124,89,0.07) 0%, transparent 40%);
+  animation:glowPulse 8s ease-in-out infinite alternate;
+}
+@keyframes glowPulse{
+  0%{opacity:0.7;}100%{opacity:1;}
+}
+
+/* NOISE */
+.noise-bg{position:fixed;inset:0;pointer-events:none;z-index:5;opacity:0.03;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:200px 200px;animation:noiseA 0.5s steps(2) infinite;}
+@keyframes noiseA{0%{background-position:0 0;}50%{background-position:20px -30px;}100%{background-position:10px -10px;}}
+
+/* Insects canvas */
+canvas#insects{position:fixed;inset:0;z-index:6;pointer-events:none;opacity:0.08;}
+
+/* All content above bg */
+nav,section,.gallery-section,.cta-section,footer,.section-marquee{position:relative;z-index:10;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:20px 48px;background:rgba(10,10,10,0.82);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+.nav-logo svg{display:block;height:34px;width:auto;}
+.nav-links{display:flex;gap:28px;list-style:none;align-items:center;}
+.nav-links a{font-size:12px;color:var(--muted);text-decoration:none;letter-spacing:0.06em;text-transform:uppercase;transition:color 0.2s;}
+.nav-links a:hover{color:var(--white);}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:0 48px 80px;border-bottom:1px solid var(--border);overflow:hidden;}
+.hero-marquee-wrap{overflow:hidden;margin-bottom:32px;padding:0;}
+.hero-marquee{display:flex;width:max-content;animation:marquee 18s linear infinite;}
+.hero-marquee span{font-size:10px;font-weight:700;letter-spacing:0.28em;text-transform:uppercase;color:rgba(245,242,235,0.2);white-space:nowrap;padding:0 32px;}
+.hero-marquee .dot{color:rgba(74,124,89,0.5);}
+@keyframes marquee{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+.hero-tag{font-size:11px;font-weight:700;letter-spacing:0.3em;text-transform:uppercase;color:var(--accent);margin-bottom:24px;}
+.hero-title{font-size:clamp(52px,8.5vw,130px);font-weight:900;line-height:0.9;letter-spacing:-0.03em;max-width:1000px;overflow:hidden;}
+.hero-title .word{display:inline-block;animation:wordReveal 0.9s cubic-bezier(0.16,1,0.3,1) both;}
+.w2{animation-delay:0.12s;}.w3{animation-delay:0.24s;}
+@keyframes wordReveal{from{opacity:0;transform:translateY(60px);}to{opacity:1;transform:translateY(0);}}
+.line-muted{color:var(--muted);}.line-accent{color:var(--accent);}
+.hero-sub{margin-top:48px;display:flex;gap:64px;align-items:flex-end;animation:fadeUp 1s 0.6s both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+.hero-desc{font-size:16px;color:var(--muted);max-width:420px;line-height:1.7;}
+.hero-stats{display:flex;gap:40px;}
+.stat-num{font-size:36px;font-weight:900;color:var(--white);line-height:1;}
+.stat-label{font-size:11px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-top:4px;}
+
+/* LANDSCAPE DIVIDER — появляется между hero и about */
+.landscape-divider{
+  position:relative;z-index:10;
+  height:340px;overflow:hidden;
+  border-bottom:1px solid var(--border);
+}
+.landscape-divider img{
+  width:100%;height:100%;object-fit:cover;object-position:center 60%;
+  filter:grayscale(80%) brightness(0.25) contrast(1.3) sepia(20%);
+  transform:scale(1.08);
+  transition:transform 12s ease-out;
+}
+.landscape-divider img.loaded{transform:scale(1);}
+.landscape-divider-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to bottom, var(--black) 0%, transparent 30%, transparent 70%, var(--black) 100%);
+}
+.landscape-divider-label{
+  position:absolute;bottom:32px;left:48px;
+  font-size:11px;font-weight:700;letter-spacing:0.25em;
+  text-transform:uppercase;color:rgba(245,242,235,0.3);
+}
+
+/* SECTIONS */
+section{padding:120px 48px;border-bottom:1px solid var(--border);background:rgba(10,10,10,0.0);}
+.section-tag{font-size:11px;font-weight:700;letter-spacing:0.3em;text-transform:uppercase;color:var(--accent);margin-bottom:24px;}
+
+/* SEMI-TRANSPARENT section backgrounds to let nature bg breathe */
+#about{background:rgba(10,10,10,0.75);}
+#projects{background:rgba(10,10,10,0.78);}
+#mission{background:rgba(10,10,10,0.72);}
+
+.reveal{opacity:0;transform:translateY(40px);transition:opacity 0.8s cubic-bezier(0.16,1,0.3,1),transform 0.8s cubic-bezier(0.16,1,0.3,1);}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.reveal-delay-1{transition-delay:0.1s;}.reveal-delay-2{transition-delay:0.2s;}.reveal-delay-3{transition-delay:0.3s;}
+
+/* ABOUT */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;}
+.about-left h2{font-size:clamp(36px,4vw,56px);font-weight:900;line-height:1;letter-spacing:-0.02em;margin-bottom:32px;}
+.about-left p,.about-right p{color:var(--muted);line-height:1.8;margin-bottom:20px;}
+.about-right{padding-top:48px;}
+.father-note{margin-top:40px;padding:24px;border-left:2px solid var(--accent);color:var(--muted);font-style:italic;font-size:15px;}
+.father-note strong{color:var(--white);font-style:normal;}
+
+/* LANDSCAPE STRIP — full-width nature photo strip between sections */
+.nature-strip{
+  position:relative;z-index:10;
+  height:260px;overflow:hidden;display:flex;gap:2px;
+}
+.nature-strip-img{
+  flex:1;overflow:hidden;
+}
+.nature-strip-img img{
+  width:100%;height:100%;object-fit:cover;
+  filter:grayscale(70%) brightness(0.28) contrast(1.2) sepia(15%);
+  transition:filter 0.5s,transform 0.5s;
+}
+.nature-strip-img:hover img{filter:grayscale(30%) brightness(0.45) contrast(1.1);transform:scale(1.03);}
+.nature-strip-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,var(--black) 0%,transparent 20%,transparent 80%,var(--black) 100%);pointer-events:none;}
+
+/* CAROUSEL */
+.gallery-section{padding:80px 0;border-bottom:1px solid var(--border);background:rgba(10,10,10,0.76);}
+.gallery-header{padding:0 48px 40px;display:flex;justify-content:space-between;align-items:flex-end;}
+.gallery-header-left .section-tag{margin-bottom:8px;}
+.gallery-header-left h2{font-size:clamp(28px,3vw,44px);font-weight:900;line-height:1;letter-spacing:-0.02em;}
+.carousel-controls{display:flex;gap:12px;}
+.carousel-btn{width:48px;height:48px;border:1px solid var(--border);background:transparent;color:var(--white);font-size:18px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;}
+.carousel-btn:hover{background:var(--accent);border-color:var(--accent);color:var(--black);}
+.carousel-track-wrap{overflow:hidden;}
+.carousel-track{display:flex;transition:transform 0.6s cubic-bezier(0.16,1,0.3,1);}
+.carousel-slide{flex:0 0 calc(33.333% - 2px);margin-right:2px;height:320px;position:relative;overflow:hidden;background:#111;}
+.carousel-slide img{width:100%;height:100%;object-fit:cover;filter:grayscale(55%) contrast(1.1);transition:filter 0.4s,transform 0.4s;}
+.carousel-slide:hover img{filter:grayscale(15%) contrast(1.05);transform:scale(1.03);}
+.slide-caption{position:absolute;bottom:0;left:0;right:0;padding:20px 24px;background:linear-gradient(transparent,rgba(10,10,10,0.9));}
+.slide-caption strong{display:block;font-size:13px;font-weight:700;color:var(--white);margin-bottom:4px;}
+.slide-caption span{font-size:11px;color:var(--muted);letter-spacing:0.05em;}
+.carousel-dots{display:flex;gap:8px;justify-content:center;margin-top:28px;}
+.carousel-dot{width:6px;height:6px;border-radius:50%;background:var(--border);transition:background 0.2s,transform 0.2s;}
+.carousel-dot.active{background:var(--accent);transform:scale(1.3);}
+
+/* SECTION MARQUEE */
+.section-marquee{border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:14px 0;overflow:hidden;background:rgba(10,10,10,0.6);}
+.section-marquee-inner{display:flex;width:max-content;animation:marquee 22s linear infinite;}
+.section-marquee-inner span{font-size:11px;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;color:var(--border);white-space:nowrap;padding:0 48px;}
+.section-marquee-inner .hi{color:var(--muted);}
+
+/* PROJECTS */
+.projects-header{margin-bottom:80px;}
+.projects-header h2{font-size:clamp(36px,4vw,56px);font-weight:900;line-height:1;letter-spacing:-0.02em;}
+.projects-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;}
+.project-card{padding:48px 40px;background:rgba(15,15,15,0.9);border:1px solid var(--border);transition:background 0.25s;}
+.project-card:hover{background:rgba(22,22,22,0.95);}
+.project-num{font-size:11px;color:var(--accent);letter-spacing:0.2em;font-weight:700;margin-bottom:24px;}
+.project-card h3{font-size:22px;font-weight:900;line-height:1.1;margin-bottom:16px;letter-spacing:-0.01em;}
+.project-card p{font-size:14px;color:var(--muted);line-height:1.7;}
+.project-year{margin-top:24px;font-size:11px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;}
+
+/* CRISIS */
+.crisis-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;}
+.crisis-left h2{font-size:clamp(36px,4vw,56px);font-weight:900;line-height:1;letter-spacing:-0.02em;margin-bottom:32px;}
+.crisis-left p{color:var(--muted);line-height:1.8;margin-bottom:20px;}
+.crisis-right{padding:48px;background:rgba(15,15,15,0.9);border:1px solid var(--border);}
+.crisis-right blockquote{font-size:20px;font-weight:700;line-height:1.4;color:var(--white);margin-bottom:20px;}
+.crisis-right cite{font-size:12px;color:var(--muted);font-style:normal;letter-spacing:0.1em;text-transform:uppercase;}
+
+/* FACTS */
+.why-inner{max-width:800px;}
+.why-inner h2{font-size:clamp(40px,5vw,72px);font-weight:900;line-height:0.95;letter-spacing:-0.03em;margin-bottom:48px;}
+.why-inner h2 .muted{color:var(--muted);}
+.why-facts{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;margin-top:64px;}
+.fact{border-top:1px solid var(--border);padding-top:24px;}
+.fact-num{font-size:40px;font-weight:900;color:var(--accent);line-height:1;}
+.fact-text{font-size:13px;color:var(--muted);margin-top:8px;line-height:1.6;}
+
+/* CTA */
+.cta-section{padding:120px 48px;background:var(--accent);position:relative;z-index:10;}
+.cta-inner{display:flex;justify-content:space-between;align-items:flex-end;gap:40px;flex-wrap:wrap;}
+.cta-text h2{font-size:clamp(40px,5vw,72px);font-weight:900;line-height:0.95;letter-spacing:-0.03em;color:var(--black);max-width:600px;margin-bottom:16px;}
+.cta-text p{font-size:16px;color:rgba(10,10,10,0.6);max-width:420px;}
+.cta-buttons{display:flex;flex-direction:column;gap:12px;min-width:240px;}
+.btn-primary{display:block;text-align:center;padding:18px 32px;background:var(--black);color:var(--white);font-size:13px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none;transition:opacity 0.2s;}
+.btn-primary:hover{opacity:0.8;}
+.btn-secondary{display:block;text-align:center;padding:18px 32px;background:transparent;border:1px solid var(--black);color:var(--black);font-size:13px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none;transition:all 0.2s;}
+.btn-secondary:hover{background:var(--black);color:var(--white);}
+
+footer{padding:48px;display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;position:relative;z-index:10;background:rgba(10,10,10,0.92);}
+.footer-logo{font-size:13px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--white);}
+.footer-links{display:flex;gap:24px;list-style:none;}
+.footer-links a{font-size:12px;color:var(--muted);text-decoration:none;letter-spacing:0.05em;transition:color 0.2s;}
+.footer-links a:hover{color:var(--white);}
+.footer-copy{font-size:12px;color:var(--muted);}
+
+@media(max-width:768px){
+  nav{padding:16px 24px;}.nav-links{display:none;}
+  .hero{padding:0 24px 60px;}.hero-sub{flex-direction:column;gap:32px;}
+  section{padding:80px 24px;}
+  .about-grid,.crisis-grid,.projects-grid,.why-facts{grid-template-columns:1fr;gap:40px;}
+  .gallery-header{padding:0 24px 32px;flex-direction:column;align-items:flex-start;gap:20px;}
+  .carousel-slide{flex:0 0 calc(85% - 2px);}
+  .landscape-divider{height:200px;}.nature-strip{height:160px;}
+  .cta-inner{flex-direction:column;align-items:flex-start;}
+  footer{padding:32px 24px;flex-direction:column;align-items:flex-start;}
+}
+
+
+/* HERO BACKGROUND — Parnassius apollo full screen */
+.hero{
+  position:relative;
+  min-height:100vh;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding:0 48px 80px;
+  border-bottom:1px solid var(--border);
+  overflow:hidden;
+}
+.hero-bg-img{
+  position:absolute;inset:0;z-index:0;
+  pointer-events:none;overflow:hidden;
+}
+.hero-bg-img img{
+  width:100%;height:100%;object-fit:cover;object-position:center 40%;
+  filter:grayscale(15%) brightness(0.22) contrast(1.25) sepia(6%);
+  transform:scale(1.04);
+  animation:heroBgZoom 14s ease-out forwards;
+}
+@keyframes heroBgZoom{
+  0%{transform:scale(1.06);}100%{transform:scale(1.0);}
+}
+/* multi-layer overlay: bottom-heavy dark, left accent */
+.hero-bg-overlay{
+  position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:
+    linear-gradient(to bottom,
+      rgba(10,10,10,0.55) 0%,
+      rgba(10,10,10,0.2) 35%,
+      rgba(10,10,10,0.15) 55%,
+      rgba(10,10,10,0.85) 85%,
+      var(--black) 100%),
+    radial-gradient(ellipse at 60% 40%, rgba(74,124,89,0.1) 0%, transparent 55%);
+}
+/* Species badge — top right */
+.hero-species-badge{
+  position:absolute;bottom:88px;right:56px;z-index:3;
+  border:1px solid rgba(245,242,235,0.1);
+  background:rgba(10,10,10,0.45);
+  backdrop-filter:blur(12px);
+  padding:18px 22px;
+  max-width:240px;
+  animation:fadeUp 1s 0.8s both;
+}
+.hero-species-label{
+  font-size:9px;font-weight:700;letter-spacing:0.3em;
+  text-transform:uppercase;color:var(--accent);margin-bottom:10px;
+}
+.hero-species-name{
+  font-size:18px;font-weight:900;color:var(--white);
+  line-height:1.1;letter-spacing:-0.01em;margin-bottom:4px;
+}
+.hero-species-latin{
+  font-size:12px;color:var(--muted);font-style:italic;margin-bottom:12px;
+}
+.hero-species-status{
+  display:inline-block;padding:3px 10px;
+  border:1px solid #e67e22;color:#e67e22;
+  background:rgba(230,126,34,0.08);
+  font-size:9px;font-weight:700;letter-spacing:0.18em;
+  text-transform:uppercase;margin-bottom:10px;
+}
+.hero-species-fact{
+  font-size:11px;color:rgba(245,242,235,0.5);
+  line-height:1.6;border-top:1px solid rgba(255,255,255,0.06);
+  padding-top:10px;margin-top:2px;
+}
+
+/* hero content above bg */
+.hero > *:not(.hero-bg-img):not(.hero-bg-overlay){position:relative;z-index:2;}
+
+/* HERO SCROLL INDICATOR */
+.hero-scroll{
+  position:absolute;bottom:32px;right:48px;z-index:3;
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  animation:fadeUp 1s 1.2s both;
+}
+.hero-scroll-line{width:1px;height:60px;background:rgba(255,255,255,0.1);position:relative;overflow:hidden;}
+.hero-scroll-line::after{content:'';position:absolute;top:-100%;left:0;right:0;height:100%;background:var(--accent);animation:scrollLine 2s ease-in-out infinite;}
+@keyframes scrollLine{0%{top:-100%;}60%{top:100%;}100%{top:100%;}}
+.hero-scroll span{font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--muted);}
+
+@media(max-width:768px){
+  .hero{padding:0 24px 60px;}
+  .hero-species-badge{bottom:100px;right:16px;max-width:200px;padding:12px 14px;}
+  .hero-scroll{display:none;}
+}
+
+
+/* ═══════════════════════════════
+   INSECT SHOWCASE — full-width panels between sections
+═══════════════════════════════ */
+.insect-showcase{
+  position:relative;z-index:10;
+  height:520px;overflow:hidden;
+}
+.insect-showcase-track{
+  display:flex;height:100%;
+  transition:transform 0.0s; /* controlled by JS */
+}
+.insect-slide{
+  flex:0 0 100%;height:100%;position:relative;overflow:hidden;
+}
+.insect-slide img{
+  position:absolute;inset:-5%;
+  width:110%;height:110%;object-fit:cover;
+  object-position:center center;
+  filter:grayscale(30%) brightness(0.32) contrast(1.25) sepia(10%);
+  transition:filter 1.2s ease;
+  transform:scale(1.0);
+}
+.insect-slide.active img{
+  filter:grayscale(10%) brightness(0.42) contrast(1.15) sepia(5%);
+  animation:insectZoom 8s ease-out forwards;
+}
+@keyframes insectZoom{
+  0%{transform:scale(1.06);}
+  100%{transform:scale(1.0);}
+}
+/* gradient overlay: black top/bottom, transparent center */
+.insect-slide-overlay{
+  position:absolute;inset:0;
+  background:
+    linear-gradient(to bottom, var(--black) 0%, transparent 18%, transparent 72%, var(--black) 100%),
+    linear-gradient(to right, rgba(10,10,10,0.4) 0%, transparent 25%, transparent 75%, rgba(10,10,10,0.4) 100%);
+  z-index:2;
+}
+/* insect info overlay */
+.insect-info{
+  position:absolute;bottom:56px;left:56px;z-index:3;
+  animation:insectInfoIn 0.8s cubic-bezier(0.16,1,0.3,1) both;
+}
+@keyframes insectInfoIn{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+.insect-tag{
+  font-size:10px;font-weight:700;letter-spacing:0.3em;
+  text-transform:uppercase;color:var(--accent);margin-bottom:10px;
+}
+.insect-name{
+  font-size:clamp(28px,3.5vw,48px);font-weight:900;
+  line-height:1;letter-spacing:-0.02em;color:var(--white);
+  margin-bottom:6px;
+}
+.insect-latin{
+  font-size:14px;color:var(--muted);font-style:italic;margin-bottom:16px;
+}
+.insect-status{
+  display:inline-block;padding:4px 12px;
+  border:1px solid;font-size:10px;font-weight:700;
+  letter-spacing:0.15em;text-transform:uppercase;
+}
+.insect-status.cr{border-color:#c0392b;color:#c0392b;}
+.insect-status.en{border-color:#e67e22;color:#e67e22;}
+.insect-status.vu{border-color:#f1c40f;color:#f1c40f;}
+
+/* navigation dots on the right */
+.insect-nav{
+  position:absolute;right:48px;top:50%;transform:translateY(-50%);
+  z-index:4;display:flex;flex-direction:column;gap:10px;
+}
+.insect-nav-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:rgba(245,242,235,0.2);border:none;
+  transition:background 0.3s,transform 0.3s;
+}
+.insect-nav-dot.active{background:var(--accent);transform:scale(1.5);}
+
+/* progress bar */
+.insect-progress{
+  position:absolute;bottom:0;left:0;height:2px;
+  background:var(--accent);z-index:4;width:0%;
+  transition:width 0.1s linear;
+}
+
+@media(max-width:768px){
+  .insect-showcase{height:320px;}
+  .insect-info{bottom:32px;left:24px;}
+  .insect-nav{right:20px;}
+}
+
+
+/* ═══════════════════════════════════════════════
+   STICKY SCROLL INSECT SECTION
+   — full-screen panel, image changes on scroll
+═══════════════════════════════════════════════ */
+.sticky-insects{
+  position:relative;
+  z-index:10;
+  /* height = number of slides × 100vh so user scrolls through them */
+  height:500vh;
+}
+.sticky-insects-inner{
+  position:sticky;
+  top:0;
+  height:100vh;
+  overflow:hidden;
+  display:flex;
+  align-items:stretch;
+}
+
+/* IMAGE SIDE */
+.si-image-wrap{
+  position:absolute;inset:0;
+  z-index:1;
+}
+.si-slide{
+  position:absolute;inset:0;
+  opacity:0;
+  transition:opacity 1.1s cubic-bezier(0.4,0,0.2,1);
+  pointer-events:none;
+}
+.si-slide.active{
+  opacity:1;pointer-events:auto;
+}
+.si-slide img{
+  width:100%;height:100%;object-fit:cover;object-position:center;
+  filter:grayscale(20%) brightness(0.35) contrast(1.2) sepia(8%);
+  transform:scale(1.04);
+  transition:transform 8s ease-out, filter 1.2s ease;
+}
+.si-slide.active img{
+  transform:scale(1.0);
+  filter:grayscale(5%) brightness(0.42) contrast(1.15) sepia(4%);
+}
+
+/* Gradient overlay — left side dark for text readability */
+.si-overlay{
+  position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:
+    linear-gradient(to right, rgba(10,10,10,0.92) 0%, rgba(10,10,10,0.6) 38%, transparent 60%),
+    linear-gradient(to bottom, var(--black) 0%, transparent 8%, transparent 92%, var(--black) 100%);
+}
+
+/* TEXT SIDE */
+
+.si-texts{
+  position:absolute;inset:0;z-index:3;pointer-events:none;
+}
+.si-text-item{
+  position:absolute;top:50%;left:56px;
+  width:clamp(280px,42%,520px);
+  transform:translateY(calc(-50% + 28px));
+  opacity:0;
+  transition:opacity 0.65s ease, transform 0.65s cubic-bezier(0.16,1,0.3,1);
+  pointer-events:none;
+}
+.si-text-item.active{
+  opacity:1;transform:translateY(-50%);pointer-events:auto;
+}
+
+.si-counter{
+  font-size:11px;color:var(--muted);letter-spacing:0.25em;
+  text-transform:uppercase;margin-bottom:20px;
+  display:flex;align-items:center;gap:16px;
+}
+.si-counter-line{
+  display:inline-block;width:40px;height:1px;
+  background:var(--accent);vertical-align:middle;
+}
+.si-species-tag{
+  font-size:10px;font-weight:700;letter-spacing:0.3em;
+  text-transform:uppercase;color:var(--accent);margin-bottom:14px;
+}
+.si-name{
+  font-size:clamp(36px,4.5vw,64px);font-weight:900;
+  line-height:0.95;letter-spacing:-0.03em;
+  color:var(--white);margin-bottom:10px;
+}
+.si-latin{
+  font-size:15px;color:var(--muted);font-style:italic;margin-bottom:20px;
+}
+.si-status{
+  display:inline-block;padding:5px 14px;
+  font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;
+  border:1px solid;margin-bottom:24px;
+}
+.si-status.cr{border-color:#c0392b;color:#c0392b;background:rgba(192,57,43,0.08);}
+.si-status.en{border-color:#e67e22;color:#e67e22;background:rgba(230,126,34,0.08);}
+.si-status.vu{border-color:#f1c40f;color:#f1c40f;background:rgba(241,196,15,0.08);}
+.si-desc{
+  font-size:14px;color:var(--muted);line-height:1.8;max-width:400px;
+  border-left:2px solid var(--border);padding-left:20px;
+}
+
+/* RIGHT SIDE — progress dots */
+.si-nav{
+  position:absolute;right:48px;top:50%;
+  transform:translateY(-50%);z-index:4;
+  display:flex;flex-direction:column;gap:12px;align-items:center;
+}
+.si-dot{
+  width:5px;height:5px;border-radius:50%;
+  background:rgba(245,242,235,0.2);
+  transition:background 0.3s,height 0.3s,border-radius 0.3s;
+  cursor:pointer;border:none;
+}
+.si-dot.active{
+  background:var(--accent);height:28px;border-radius:3px;
+}
+
+/* scroll hint first time */
+.si-scroll-hint{
+  position:absolute;bottom:32px;left:56px;z-index:4;
+  font-size:11px;color:var(--muted);letter-spacing:0.15em;
+  text-transform:uppercase;display:flex;align-items:center;gap:12px;
+  animation:hintFade 3s 2s ease-out forwards;
+  opacity:1;
+}
+@keyframes hintFade{0%{opacity:1;}100%{opacity:0;pointer-events:none;}}
+.si-scroll-hint::before{
+  content:'';display:inline-block;width:24px;height:1px;background:var(--accent);
+}
+
+@media(max-width:768px){
+  .si-text-item{left:24px;right:24px;}
+  .si-content{padding:0 24px;width:100%;}
+  .si-overlay{background:linear-gradient(to bottom, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.7) 30%, rgba(10,10,10,0.7) 70%, rgba(10,10,10,0.95) 100%);}
+  .si-nav{right:16px;}
+}
+
+
+
+
+.hero-species-badge{
+  cursor:pointer;
+  transition:border-color 0.3s, background 0.3s;
+  position:relative;
+}
+.hero-species-badge:hover{
+  border-color:rgba(74,124,89,0.35);
+  background:rgba(10,10,10,0.72);
+}
+/* expanded panel — absolutely to the LEFT */
+.hero-species-extra{
+  position:absolute;
+  top:0;
+  right:calc(100% + 16px);
+  width:300px;
+  background:rgba(10,10,10,0.85);
+  backdrop-filter:blur(14px);
+  border:1px solid rgba(74,124,89,0.25);
+  padding:24px;
+  pointer-events:none;
+  opacity:0;
+  transform:translateX(12px);
+  transition:opacity 0.35s ease, transform 0.4s cubic-bezier(0.16,1,0.3,1);
+}
+.hero-species-badge:hover .hero-species-extra{
+  opacity:1;
+  transform:translateX(0);
+  pointer-events:auto;
+}
+
+.hse-item-label{ font-size:9px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);margin-bottom:3px; }
+.hse-item-value{ font-size:12px;color:var(--white);line-height:1.3; }
+
+
+.hero-species-badge:hover 
+/* connector dot between badge and panel */
+.hero-species-extra::after{
+  content:'';position:absolute;
+  top:20px;right:-5px;
+  width:8px;height:8px;border-radius:50%;
+  background:var(--accent);
+  box-shadow:0 0 10px rgba(74,124,89,0.6);
+}
+
+
+
+.hero-species-badge{ cursor:pointer; transition:border-color 0.3s, background 0.3s; }
+.hero-species-badge:hover{ border-color:rgba(74,124,89,0.35); background:rgba(10,10,10,0.72); }
+
+.hse-hint::before{ content:'';display:inline-block;width:12px;height:1px;background:var(--accent); }
+
+/* FLOATING PANEL */
+
+
+
+
+
+
+
+
+
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- PARALLAX BG -->
+<div class="bg-parallax">
+  <div class="bg-layer bg-layer-1" id="bgLayer1"></div>
+  <div class="bg-layer bg-layer-2" id="bgLayer2"></div>
+  <div class="bg-vignette"></div>
+  <div class="bg-glow"></div>
+</div>
+
+<div class="noise-bg"></div>
+<canvas id="insects"></canvas>
+
+<!-- NAV -->
+<nav>
+  <a href="#hero">
+    <svg viewBox="0 0 170 42" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:44px;width:auto;">
+      <path d="M6 34 C6 20 16 8 30 8 C20 18 18 28 22 34 Z" fill="#4a7c59"/>
+      <path d="M22 34 C26 28 30 18 30 8 C38 14 38 28 22 34 Z" fill="#3a6347"/>
+      <line x1="30" y1="8" x2="26" y2="2" stroke="#4a7c59" stroke-width="1.2" stroke-linecap="round"/>
+      <line x1="30" y1="8" x2="34" y2="2" stroke="#4a7c59" stroke-width="1.2" stroke-linecap="round"/>
+      <circle cx="26" cy="2" r="1.2" fill="#4a7c59"/>
+      <circle cx="34" cy="2" r="1.2" fill="#4a7c59"/>
+      <text x="46" y="27" font-family="Inter,sans-serif" font-weight="900" font-size="18" fill="#ffffff" letter-spacing="2">ANA JURAT</text>
+    </svg>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#gallery">Events</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#mission">Mission</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+
+  <!-- PARNASSIUS APOLLO BACKGROUND -->
+  <div class="hero-bg-img">
+    <img src="https://pplx-res.cloudinary.com/image/upload/pplx_search_images/b61a567e55d1c145ae09ccadba69330fd37c65bb.jpg"
+         alt="Parnassius apollo — Apollo butterfly, endangered species Spain"/>
+  </div>
+  <div class="hero-bg-overlay"></div>
+
+  <!-- TITLE -->
+  <div class="hero-tag">Foundation · Est. Spain</div>
+  <h1 class="hero-title">
+    <span class="word w1 line-muted">Insects.</span><br>
+    <span class="word w2">Protect.</span><br>
+    <span class="word w3 line-accent">Now.</span>
+  </h1>
+
+  <!-- BOTTOM BAR -->
+  <div class="hero-sub">
+    <p class="hero-desc">The Ana Jurat García Foundation works across Spain to protect endangered insect species — the invisible backbone of every ecosystem we depend on.</p>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">9%</div><div class="stat-label">wild bees<br>threatened in Europe</div></div>
+      <div class="stat"><div class="stat-num">1/3</div><div class="stat-label">pollinators<br>in decline</div></div>
+      <div class="stat"><div class="stat-num">0</div><div class="stat-label">time to wait</div></div>
+      <div class="stat">
+        <div class="stat-num" style="font-size:13px;color:var(--muted);line-height:1.7;letter-spacing:0.06em;">EMBRACE<br>eBMS · LIFE</div>
+        <div class="stat-label">active programmes</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCROLL -->
+  <div class="hero-scroll">
+    <div class="hero-scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+
+</section>
+
+<!-- STANDALONE MARQUEE — between hero and landscape -->
+<div style="position:relative;z-index:10;overflow:hidden;border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:12px 0;background:rgba(10,10,10,0.9);backdrop-filter:blur(8px);">
+  <div style="display:flex;width:max-content;animation:marquee 20s linear infinite;">
+    <span style="font-size:10px;font-weight:700;letter-spacing:0.28em;text-transform:uppercase;color:var(--muted);white-space:nowrap;padding:0 36px;">Fundación Ana Jurat García</span>
+    <span style="padding:0 8px;color:var(--accent);font-size:10px;">·</span>
+    <span style="font-size:10px;font-weight:700;letter-spacing:0.28em;text-transform:uppercase;color:var(--muted);white-space:nowrap;padding:0 36px;">Protección de Insectos</span>
+    <span style="padding:0 8px;color:var(--accent);font-size:10px;">·</span>
+    <span style="font-size:10px;font-weight:700;letter-spacing:0.28em;text-transform:uppercase;color:var(--muted);white-space:nowrap;padding:0 36px;">España</span>
+    <span style="padding:0 8px;color:var(--accent);font-size:10px;">·</span>
+    <span style="font-size:10px;font-weight:700;letter-spacing:0.28em;text-transform:uppercase;color:var(--muted);white-space:nowrap;padding:0 36px;">Monitoreo Científico</span>
+    <span style="padding:0 8px;color:var(--accent);font-size:10px;">·</span>
+    <span style="font-size:10px;font-weight:700;letter-spacing:0.28em;text-transform:uppercase;color:var(--muted);white-space:nowrap;padding:0 36px;">EMBRACE · eBMS · LIFE</span>
+    <span style="padding:0 8px;color:var(--accent);font-size:10px;">·</span>
+    <span style="font-size:10px;font-weight:700;letter-spacing:0.28em;text-transform:uppercase;color:var(--muted);white-space:nowrap;padding:0 36px;">Fundación Ana Jurat García</span>
+    <span style="padding:0 8px;color:var(--accent);font-size:10px;">·</span>
+    <span style="font-size:10px;font-weight:700;letter-spacing:0.28em;text-transform:uppercase;color:var(--muted);white-space:nowrap;padding:0 36px;">Protección de Insectos</span>
+    <span style="padding:0 8px;color:var(--accent);font-size:10px;">·</span>
+    <span style="font-size:10px;font-weight:700;letter-spacing:0.28em;text-transform:uppercase;color:var(--muted);white-space:nowrap;padding:0 36px;">España</span>
+    <span style="padding:0 8px;color:var(--accent);font-size:10px;">·</span>
+    <span style="font-size:10px;font-weight:700;letter-spacing:0.28em;text-transform:uppercase;color:var(--muted);white-space:nowrap;padding:0 36px;">Monitoreo Científico</span>
+    <span style="padding:0 8px;color:var(--accent);font-size:10px;">·</span>
+    <span style="font-size:10px;font-weight:700;letter-spacing:0.28em;text-transform:uppercase;color:var(--muted);white-space:nowrap;padding:0 36px;">EMBRACE · eBMS · LIFE</span>
+    <span style="padding:0 8px;color:var(--accent);font-size:10px;">·</span>
+  </div>
+</div>
+
+
+<!-- LANDSCAPE DIVIDER 1 — lavender olive grove Spain -->
+<div class="landscape-divider">
+  <img id="ldImg1" src="https://pplx-res.cloudinary.com/image/upload/pplx_search_images/1397401d1e70d521cf00260500f3fa62b0202c84.jpg" alt="Spanish olive grove lavender landscape"/>
+  <div class="landscape-divider-overlay"></div>
+  <div class="landscape-divider-label">Sierra · Andalucía · España</div>
+</div>
+
+    <!-- 2. Iridescent beetle — Rosalia alpina -->
+    <div class="insect-slide">
+      <img src="https://pplx-res.cloudinary.com/image/upload/pplx_search_images/4fedd3f58d530c5fef67ee8a9cb1ad7ec235c7a7.jpg"
+           alt="Rosalia alpina — Alpine Longhorn Beetle"/>
+      <div class="insect-slide-overlay"></div>
+      <div class="insect-info">
+        <div class="insect-tag">Endangered Species · Coleoptera</div>
+        <div class="insect-name">Alpine Longhorn</div>
+        <div class="insect-latin">Rosalia alpina</div>
+        <div class="insect-status vu">VU — Vulnerable</div>
+      </div>
+    </div>
+
+    <!-- 3. Rare bumblebee — Bombus terrestris -->
+    <div class="insect-slide">
+      <img src="https://pplx-res.cloudinary.com/image/upload/pplx_search_images/3d09ecc1d5bc1b7a1395c4d4eef5a1d20393ec69.jpg"
+           alt="Rare endangered bumblebee"/>
+      <div class="insect-slide-overlay"></div>
+      <div class="insect-info">
+        <div class="insect-tag">Endangered Species · Hymenoptera</div>
+        <div class="insect-name">Short-haired Bumblebee</div>
+        <div class="insect-latin">Bombus subterraneus</div>
+        <div class="insect-status cr">CR — Critically Endangered</div>
+      </div>
+    </div>
+
+    <!-- 4. Lappet moth — Gastropacha quercifolia -->
+    <div class="insect-slide">
+      <img src="https://pplx-res.cloudinary.com/image/upload/pplx_search_images/717e2c843dd5691c59ce2d1f76246f0ac3a409cf.jpg"
+           alt="Lappet moth rare species"/>
+      <div class="insect-slide-overlay"></div>
+      <div class="insect-info">
+        <div class="insect-tag">Endangered Species · Lepidoptera</div>
+        <div class="insect-name">Lappet Moth</div>
+        <div class="insect-latin">Gastropacha quercifolia</div>
+        <div class="insect-status vu">VU — Vulnerable</div>
+      </div>
+    </div>
+
+    <!-- 5. Orange butterfly on flowers -->
+    <div class="insect-slide">
+      <img src="https://pplx-res.cloudinary.com/image/upload/pplx_search_images/80b2496562d99954f578cf8cf739ab67a440a2a1.jpg"
+           alt="Endangered orange butterfly Spain"/>
+      <div class="insect-slide-overlay"></div>
+      <div class="insect-info">
+        <div class="insect-tag">Endangered Species · Lepidoptera</div>
+        <div class="insect-name">Spanish Fritillary</div>
+        <div class="insect-latin">Euphydryas desfontainii</div>
+        <div class="insect-status en">EN — Endangered</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- dots nav -->
+  <div class="insect-nav" id="insectNav"></div>
+  <!-- progress bar -->
+  <div class="insect-progress" id="insectProgress"></div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════
+     STICKY SCROLL — ENDANGERED SPECIES OF SPAIN
+══════════════════════════════════════════════════ -->
+<div class="sticky-insects" id="stickyInsects">
+  <div class="sticky-insects-inner">
+
+    <!-- IMAGES -->
+    <div class="si-image-wrap">
+
+      <div class="si-slide active">
+        <img src="https://pplx-res.cloudinary.com/image/upload/pplx_search_images/f5e64a657495acb9f323f821d27e3ca1f89dd61e.jpg"
+             alt="Euphydryas aurinia — Marsh Fritillary"/>
+      </div>
+      <div class="si-slide">
+        <img src="https://pplx-res.cloudinary.com/image/upload/pplx_search_images/4fedd3f58d530c5fef67ee8a9cb1ad7ec235c7a7.jpg"
+             alt="Rosalia alpina — Alpine Longhorn Beetle"/>
+      </div>
+      <div class="si-slide">
+        <img src="https://pplx-res.cloudinary.com/image/upload/pplx_search_images/3d09ecc1d5bc1b7a1395c4d4eef5a1d20393ec69.jpg"
+             alt="Bombus subterraneus — Short-haired Bumblebee"/>
+      </div>
+      <div class="si-slide">
+        <img src="https://pplx-res.cloudinary.com/image/upload/pplx_search_images/717e2c843dd5691c59ce2d1f76246f0ac3a409cf.jpg"
+             alt="Lappet Moth"/>
+      </div>
+      <div class="si-slide">
+        <img src="https://pplx-res.cloudinary.com/image/upload/pplx_search_images/80b2496562d99954f578cf8cf739ab67a440a2a1.jpg"
+             alt="Euphydryas desfontainii — Spanish Fritillary"/>
+      </div>
+
+    </div>
+
+    <!-- GRADIENT OVERLAY -->
+    <div class="si-overlay"></div>
+
+    <!-- TEXT ITEMS -->
+    <div class="si-texts">
+    <div class="si-text-item active">
+      <div class="si-counter"><span class="si-counter-line"></span>01 / 05</div>
+      <div class="si-species-tag">Lepidoptera · Spain &amp; Europe</div>
+      <div class="si-name">Marsh<br>Fritillary</div>
+      <div class="si-latin">Euphydryas aurinia</div>
+      <div class="si-status en">EN — Endangered</div>
+      <p class="si-desc">One of Europe's most threatened butterflies. Its caterpillars feed exclusively on Devil's-bit Scabious — a plant vanishing with the meadows that host it. Once common across Spain, colonies are now fragmented and isolated.</p>
+    </div>
+
+    <div class="si-text-item">
+      <div class="si-counter"><span class="si-counter-line"></span>02 / 05</div>
+      <div class="si-species-tag">Coleoptera · Alpine forests</div>
+      <div class="si-name">Alpine<br>Longhorn</div>
+      <div class="si-latin">Rosalia alpina</div>
+      <div class="si-status vu">VU — Vulnerable</div>
+      <p class="si-desc">A jewel of old-growth beech forests, its iridescent blue-grey wings make it one of Europe's most beautiful beetles. Threatened by logging and the removal of dead wood — the very habitat its larvae need to survive.</p>
+    </div>
+
+    <div class="si-text-item">
+      <div class="si-counter"><span class="si-counter-line"></span>03 / 05</div>
+      <div class="si-species-tag">Hymenoptera · Northern Europe</div>
+      <div class="si-name">Short-haired<br>Bumblebee</div>
+      <div class="si-latin">Bombus subterraneus</div>
+      <div class="si-status cr">CR — Critically Endangered</div>
+      <p class="si-desc">Once widespread across Europe, this bumblebee has collapsed to near-extinction. The loss of wildflower meadows, pesticide use and climate change have made it one of the rarest pollinators on the continent. Every colony counts.</p>
+    </div>
+
+    <div class="si-text-item">
+      <div class="si-counter"><span class="si-counter-line"></span>04 / 05</div>
+      <div class="si-species-tag">Lepidoptera · Mediterranean</div>
+      <div class="si-name">Lappet<br>Moth</div>
+      <div class="si-latin">Gastropacha quercifolia</div>
+      <div class="si-status vu">VU — Vulnerable</div>
+      <p class="si-desc">Camouflaged as a dead leaf, this remarkable moth is a master of disguise — but no disguise protects against habitat destruction. Orchards and hedgerows where its caterpillars feed are disappearing across the Iberian Peninsula.</p>
+    </div>
+
+    <div class="si-text-item">
+      <div class="si-counter"><span class="si-counter-line"></span>05 / 05</div>
+      <div class="si-species-tag">Lepidoptera · Spain endemic</div>
+      <div class="si-name">Spanish<br>Fritillary</div>
+      <div class="si-latin">Euphydryas desfontainii</div>
+      <div class="si-status en">EN — Endangered</div>
+      <p class="si-desc">Endemic to the Iberian Peninsula and North Africa, this fritillary is one of the species Ana's foundation actively monitors. It lives only in specific dry scrubland communities — habitats shrinking under land-use change and drought.</p>
+    </div>
+
+
+    </div>
+
+    <!-- NAV DOTS -->
+    <div class="si-nav" id="siNav"></div>
+
+    <!-- SCROLL HINT -->
+    <div class="si-scroll-hint">Scroll to explore species</div>
+
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-grid">
+    <div class="about-left reveal">
+      <div class="section-tag">Founder</div>
+      <h2>Ana<br>Jurat<br>García</h2>
+      <p>For five years I've witnessed firsthand how fragile the insect world in Europe really is — and how fast we can lose what we take for granted.</p>
+      <p>In my native Spain, the decline of insect species became impossible to ignore. So I built a foundation that does something about it: funding research, supporting conservation projects, and connecting the people who act.</p>
+    </div>
+    <div class="about-right reveal reveal-delay-1">
+      <p>Growing up, my father — <strong style="color:var(--white)">Prof. Juan Luis Jurat-Fuentes</strong>, professor of entomology — taught me to look at insects with curiosity, not fear. He handed me a magnifying glass before I could read. That perspective shaped everything.</p>
+      <p>What began as a family passion became an urgent mission. If we do nothing, future generations will never see some of these species. That is not acceptable.</p>
+      <div class="father-note">
+        <strong>Prof. Juan Luis Jurat-Fuentes</strong><br>
+        Professor of Entomology — the scientist who taught a daughter that every insect has a story worth protecting.
+      </div>
+    </div>
+  </div>
+</section>
+
+    <div class="insect-slide">
+      <img src="https://pplx-res.cloudinary.com/image/upload/pplx_search_images/6400be60f4c153fa89f2d8d207d0bb58cf9277f2.jpg"
+           alt="Rare metallic bee on elderflower"/>
+      <div class="insect-slide-overlay"></div>
+      <div class="insect-info">
+        <div class="insect-tag">Endangered Species · Hymenoptera</div>
+        <div class="insect-name">Metallic Sweat Bee</div>
+        <div class="insect-latin">Halictus scabiosae</div>
+        <div class="insect-status en">EN — Endangered</div>
+      </div>
+    </div>
+
+    <div class="insect-slide">
+      <img src="https://pplx-res.cloudinary.com/image/upload/pplx_search_images/ba7063a1a637f0f94b0e43f05c243d0e9433d9bd.jpg"
+           alt="Speckled butterfly Spanish wildflowers"/>
+      <div class="insect-slide-overlay"></div>
+      <div class="insect-info">
+        <div class="insect-tag">Endangered Species · Lepidoptera</div>
+        <div class="insect-name">Speckled Wood</div>
+        <div class="insect-latin">Pararge aegeria</div>
+        <div class="insect-status vu">VU — Vulnerable</div>
+      </div>
+    </div>
+
+  </div>
+  <div class="insect-nav" id="insectNav2"></div>
+  <div class="insect-progress" id="insectProgress2"></div>
+</div>
+
+<!-- GALLERY CAROUSEL -->
+<div class="gallery-section" id="gallery">
+  <div class="gallery-header reveal">
+    <div class="gallery-header-left">
+      <div class="section-tag">Events &amp; Fieldwork</div>
+      <h2>In the field.<br>On the ground.</h2>
+    </div>
+    <div class="carousel-controls">
+      <button class="carousel-btn" id="prev">&#8592;</button>
+      <button class="carousel-btn" id="next">&#8594;</button>
+    </div>
+  </div>
+  <div class="carousel-track-wrap">
+    <div class="carousel-track" id="carouselTrack">
+      <div class="carousel-slide">
+        <img src="https://images.unsplash.com/photo-1501854140801-50d01698950b?w=840&q=80" alt="Nature monitoring Spain"/>
+        <div class="slide-caption"><strong>eBMS Butterfly Transect</strong><span>Spain · Field monitoring session, 2025</span></div>
+      </div>
+      <div class="carousel-slide">
+        <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=840&q=80" alt="EMBRACE conference 2025"/>
+        <div class="slide-caption"><strong>EMBRACE Webinar — EU Member States</strong><span>Brussels / Online · March 2025</span></div>
+      </div>
+      <div class="carousel-slide">
+        <img src="https://pplx-res.cloudinary.com/image/upload/pplx_search_images/ba7063a1a637f0f94b0e43f05c243d0e9433d9bd.jpg" alt="Butterfly on wildflowers Spain"/>
+        <div class="slide-caption"><strong>Grassland Butterfly Index — Field Survey</strong><span>Catalonia meadows · Spring 2025</span></div>
+      </div>
+      <div class="carousel-slide">
+        <img src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=840&q=80" alt="Crau plain steppe habitat"/>
+        <div class="slide-caption"><strong>LIFE SOS Crau — Habitat Restoration</strong><span>Crau plain, France · 2022–2024</span></div>
+      </div>
+      <div class="carousel-slide">
+        <img src="https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?w=840&q=80" alt="La Palma volcanic landscape"/>
+        <div class="slide-caption"><strong>Cumbre Vieja — Hive Rescue Operation</strong><span>La Palma, Canary Islands · October 2021</span></div>
+      </div>
+      <div class="carousel-slide">
+        <img src="https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=840&q=80" alt="Beekeeping hive inspection"/>
+        <div class="slide-caption"><strong>Black Bee Conservation — Post-Eruption</strong><span>La Palma · 50 days under ash, November 2021</span></div>
+      </div>
+      <div class="carousel-slide">
+        <img src="https://pplx-res.cloudinary.com/image/upload/pplx_search_images/55868b0f54a4f831eea876378d12ee312e16331c.jpg" alt="Andalusia grassland nature"/>
+        <div class="slide-caption"><strong>Biodiversity Survey — Andalucía</strong><span>Southern Spain · Autumn 2023</span></div>
+      </div>
+      <div class="carousel-slide">
+        <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=840&q=80" alt="Forest biodiversity monitoring"/>
+        <div class="slide-caption"><strong>Biodiversity Monitoring — Forest Study</strong><span>Navarra forest reserve · Autumn 2023</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="carousel-dots" id="carouselDots"></div>
+</div>
+
+<!-- SECTION MARQUEE -->
+<div class="section-marquee">
+  <div class="section-marquee-inner">
+    <span class="hi">Scientific Monitoring</span><span>·</span><span class="hi">Species Protection</span><span>·</span>
+    <span class="hi">EMBRACE</span><span>·</span><span class="hi">eBMS</span><span>·</span>
+    <span class="hi">LIFE Programme</span><span>·</span><span class="hi">Prionotropis rhodanica</span><span>·</span>
+    <span class="hi">La Palma Rescue</span><span>·</span><span class="hi">Spain · France · Europe</span><span>·</span>
+    <span class="hi">Scientific Monitoring</span><span>·</span><span class="hi">Species Protection</span><span>·</span>
+    <span class="hi">EMBRACE</span><span>·</span><span class="hi">eBMS</span><span>·</span>
+    <span class="hi">LIFE Programme</span><span>·</span><span class="hi">Prionotropis rhodanica</span><span>·</span>
+    <span class="hi">La Palma Rescue</span><span>·</span><span class="hi">Spain · France · Europe</span><span>·</span>
+  </div>
+</div>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="projects-header reveal">
+    <div class="section-tag">Our Work</div>
+    <h2>Projects<br>that count.</h2>
+  </div>
+  <div class="projects-grid">
+    <div class="project-card reveal">
+      <div class="project-num">01</div>
+      <h3>EMBRACE / eBMS</h3>
+      <p>We joined the pan-European EMBRACE project, reinforcing the butterfly monitoring network eBMS and updating meadow ecosystem health indicators. Butterflies are the most visible signal of ecosystem collapse — when they vanish, the chain breaks.</p>
+      <div class="project-year">2025 – 2026</div>
+    </div>
+    <div class="project-card reveal reveal-delay-1">
+      <div class="project-num">02</div>
+      <h3>LIFE Crau Grasshopper</h3>
+      <p>We contributed to the LIFE SOS programme saving <em>Prionotropis rhodanica</em> — a critically endangered grasshopper endemic to the Crau steppe. Habitat restoration, population monitoring, reintroduction. Methods that work in one region save species in another.</p>
+      <div class="project-year">2021 – 2026</div>
+    </div>
+    <div class="project-card reveal reveal-delay-2">
+      <div class="project-num">03</div>
+      <h3>Crisis Response</h3>
+      <p>During the Cumbre Vieja eruption on La Palma (2021), beekeepers rescued hives from the lava zone. Thousands of native black bees survived 50+ days under volcanic ash. We documented this response model as proof that life can be protected even in catastrophe.</p>
+      <div class="project-year">2021</div>
+    </div>
+  </div>
+</section>
+
+<!-- STANDALONE MARQUEE — between hero and landscape -->
+<div style="position:relative;z-index:10;overflow:hidden;border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:12px 0;background:rgba(10,10,10,0.9);backdrop-filter:blur(8px);">
+  <div style="display:flex;width:max-content;animation:marquee 20s linear infinite;">
+    <span style="font-size:10px;font-weight:700;letter-spacing:0.28em;text-transform:uppercase;color:var(--muted);white-space:nowrap;padding:0 36px;">Fundación Ana Jurat García</span>
+    <span style="padding:0 8px;color:var(--accent);font-size:10px;">·</span>
+    <span style="font-size:10px;font-weight:700;letter-spacing:0.28em;text-transform:uppercase;color:var(--muted);white-space:nowrap;padding:0 36px;">Protección de Insectos</span>
+    <span style="padding:0 8px;color:var(--accent);font-size:10px;">·</span>
+    <span style="font-size:10px;font-weight:700;letter-spacing:0.28em;text-transform:uppercase;color:var(--muted);white-space:nowrap;padding:0 36px;">España</span>
+    <span style="padding:0 8px;color:var(--accent);font-size:10px;">·</span>
+    <span style="font-size:10px;font-weight:700;letter-spacing:0.28em;text-transform:uppercase;color:var(--muted);white-space:nowrap;padding:0 36px;">Monitoreo Científico</span>
+    <span style="padding:0 8px;color:var(--accent);font-size:10px;">·</span>
+    <span style="font-size:10px;font-weight:700;letter-spacing:0.28em;text-transform:uppercase;color:var(--muted);white-space:nowrap;padding:0 36px;">EMBRACE · eBMS · LIFE</span>
+    <span style="padding:0 8px;color:var(--accent);font-size:10px;">·</span>
+    <span style="font-size:10px;font-weight:700;letter-spacing:0.28em;text-transform:uppercase;color:var(--muted);white-space:nowrap;padding:0 36px;">Fundación Ana Jurat García</span>
+    <span style="padding:0 8px;color:var(--accent);font-size:10px;">·</span>
+    <span style="font-size:10px;font-weight:700;letter-spacing:0.28em;text-transform:uppercase;color:var(--muted);white-space:nowrap;padding:0 36px;">Protección de Insectos</span>
+    <span style="padding:0 8px;color:var(--accent);font-size:10px;">·</span>
+    <span style="font-size:10px;font-weight:700;letter-spacing:0.28em;text-transform:uppercase;color:var(--muted);white-space:nowrap;padding:0 36px;">España</span>
+    <span style="padding:0 8px;color:var(--accent);font-size:10px;">·</span>
+    <span style="font-size:10px;font-weight:700;letter-spacing:0.28em;text-transform:uppercase;color:var(--muted);white-space:nowrap;padding:0 36px;">Monitoreo Científico</span>
+    <span style="padding:0 8px;color:var(--accent);font-size:10px;">·</span>
+    <span style="font-size:10px;font-weight:700;letter-spacing:0.28em;text-transform:uppercase;color:var(--muted);white-space:nowrap;padding:0 36px;">EMBRACE · eBMS · LIFE</span>
+    <span style="padding:0 8px;color:var(--accent);font-size:10px;">·</span>
+  </div>
+</div>
+
+
+<!-- LANDSCAPE DIVIDER 2 — Andalusia fields -->
+<div class="landscape-divider">
+  <img src="https://pplx-res.cloudinary.com/image/upload/pplx_search_images/57ee9c5fcd222142bd75112b95ab793e529a58a2.jpg" alt="Andalusia olive fields landscape"/>
+  <div class="landscape-divider-overlay"></div>
+  <div class="landscape-divider-label">Andalucía · Campos de olivos · España</div>
+</div>
+
+<!-- MISSION -->
+<section id="mission">
+  <div class="crisis-grid">
+    <div class="crisis-left reveal">
+      <div class="section-tag">Why It Matters</div>
+      <h2>Not a<br>"green"<br>topic.</h2>
+      <p>This is about food on our table. About the stability of agriculture. About the health of every ecosystem that sustains human life.</p>
+      <p>Protecting insects is not a niche interest — it is a civilisational obligation. The foundation supports only projects with measurable results: from monitoring to direct action on the ground.</p>
+    </div>
+    <div class="crisis-right reveal reveal-delay-1">
+      <blockquote>"Endangered insects don't respect borders. Methods refined in one region can save a species in another — that's the logic we operate by."</blockquote>
+      <cite>— Ana Jurat García, Founder</cite>
+    </div>
+  </div>
+</section>
+
+<!-- FACTS -->
+<section>
+  <div class="why-inner reveal">
+    <div class="section-tag">The Numbers</div>
+    <h2>The world<br><span class="muted">loses species</span><br>faster than<br><span class="muted">it notices.</span></h2>
+  </div>
+  <div class="why-facts">
+    <div class="fact reveal"><div class="fact-num">9%</div><div class="fact-text">of wild bee species threatened with extinction across Europe</div></div>
+    <div class="fact reveal reveal-delay-1"><div class="fact-num">~33%</div><div class="fact-text">of pollinator species showing population decline in EU studies</div></div>
+    <div class="fact reveal reveal-delay-2"><div class="fact-num">50+</div><div class="fact-text">days bees survived under volcanic ash on La Palma — proof that fast action works</div></div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="contact">
+  <div class="cta-inner">
+    <div class="cta-text reveal">
+      <h2>Join the work that matters.</h2>
+      <p>Support the foundation, become a partner, or bring us a project. We respond to every message.</p>
+    </div>
+    <div class="cta-buttons reveal reveal-delay-1">
+      <a href="mailto:contact@anajuratgarcia.org" class="btn-primary">Support the Foundation</a>
+      <a href="mailto:partners@anajuratgarcia.org" class="btn-secondary">Become a Partner</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">ANA JURAT</div>
+  <ul class="footer-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#gallery">Events</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#mission">Mission</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="footer-copy">© 2026 Ana Jurat García Foundation · Spain</div>
+</footer>
+
+<script>
+// ── CURSOR ──
+const cursor=document.getElementById('cursor');
+const ring=document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px';});
+(function animRing(){rx+=(mx-rx)*0.1;ry+=(my-ry)*0.1;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animRing);})();
+document.querySelectorAll('a,button,.project-card,.carousel-slide,.nature-strip-img').forEach(el=>{
+  el.addEventListener('mouseenter',()=>ring.classList.add('hover'));
+  el.addEventListener('mouseleave',()=>ring.classList.remove('hover'));
+});
+
+// ── PARALLAX BG ON SCROLL ──
+const bg1=document.getElementById('bgLayer1');
+const bg2=document.getElementById('bgLayer2');
+window.addEventListener('scroll',()=>{
+  const y=window.scrollY;
+  bg1.style.transform=`translateY(${y*0.12}px)`;
+  bg2.style.transform=`translateY(${y*0.07}px)`;
+},{passive:true});
+
+// ── LANDSCAPE DIVIDER slow zoom-in on load ──
+const ldImg=document.getElementById('ldImg1');
+if(ldImg){setTimeout(()=>ldImg.classList.add('loaded'),100);}
+
+// ── INSECT CANVAS ──
+const canvas=document.getElementById('insects');
+const ctx=canvas.getContext('2d');
+function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
+resize();window.addEventListener('resize',resize);
+class Insect{
+  constructor(){this.reset(true);}
+  reset(init){
+    this.x=Math.random()*canvas.width;
+    this.y=init?Math.random()*canvas.height:-50;
+    this.vx=(Math.random()-0.5)*0.3;this.vy=(Math.random()-0.5)*0.3;
+    this.size=Math.random()*7+3;this.angle=Math.random()*Math.PI*2;
+    this.va=(Math.random()-0.5)*0.012;this.type=Math.floor(Math.random()*3);
+    this.opacity=Math.random()*0.55+0.2;
+  }
+  draw(){
+    ctx.save();ctx.translate(this.x,this.y);ctx.rotate(this.angle);
+    ctx.globalAlpha=this.opacity;ctx.strokeStyle='#4a7c59';ctx.lineWidth=0.8;ctx.fillStyle='rgba(74,124,89,0.1)';
+    const s=this.size;
+    if(this.type===0){
+      ctx.beginPath();ctx.ellipse(-s,0,s*1.2,s*0.65,0.4,0,Math.PI*2);ctx.fill();ctx.stroke();
+      ctx.beginPath();ctx.ellipse(s,0,s*1.2,s*0.65,-0.4,0,Math.PI*2);ctx.fill();ctx.stroke();
+      ctx.beginPath();ctx.moveTo(0,-s*0.4);ctx.lineTo(0,s*0.4);ctx.stroke();
+    }else if(this.type===1){
+      ctx.beginPath();ctx.ellipse(0,0,s*0.55,s,0,0,Math.PI*2);ctx.fill();ctx.stroke();
+      ctx.beginPath();ctx.ellipse(-s*0.85,-s*0.25,s*0.75,s*0.28,-0.3,0,Math.PI*2);ctx.stroke();
+      ctx.beginPath();ctx.ellipse(s*0.85,-s*0.25,s*0.75,s*0.28,0.3,0,Math.PI*2);ctx.stroke();
+    }else{
+      ctx.beginPath();ctx.moveTo(0,-s*1.4);ctx.lineTo(0,s*1.4);ctx.stroke();
+      ctx.beginPath();ctx.ellipse(-s*1.1,-s*0.3,s*1.1,s*0.22,0.1,0,Math.PI*2);ctx.stroke();
+      ctx.beginPath();ctx.ellipse(s*1.1,-s*0.3,s*1.1,s*0.22,-0.1,0,Math.PI*2);ctx.stroke();
+    }
+    ctx.restore();
+  }
+  update(){this.x+=this.vx;this.y+=this.vy;this.angle+=this.va;if(this.x<-60||this.x>canvas.width+60||this.y<-60||this.y>canvas.height+60)this.reset(false);}
+}
+const insects=Array.from({length:28},()=>new Insect());
+(function anim(){ctx.clearRect(0,0,canvas.width,canvas.height);insects.forEach(i=>{i.update();i.draw();});requestAnimationFrame(anim);})();
+
+// ── CAROUSEL (infinite loop) ──
+(function(){
+  const track = document.getElementById('carouselTrack');
+  if(!track) return;
+  const dotsWrap   = document.getElementById('carouselDots');
+  const counterEl  = document.getElementById('carouselCounter');
+  const spv = () => window.innerWidth <= 768 ? 1 : 3;
+  const origSlides = Array.from(track.querySelectorAll('.carousel-slide'));
+  const total = origSlides.length;
+  let busy = false;
+
+  // clone front and back for seamless loop
+  function buildClones(){
+    track.querySelectorAll('[data-clone]').forEach(c=>c.remove());
+    const s = spv();
+    origSlides.slice(-s).forEach(sl=>{
+      const c=sl.cloneNode(true);c.setAttribute('data-clone','before');track.prepend(c);
+    });
+    origSlides.slice(0,s).forEach(sl=>{
+      const c=sl.cloneNode(true);c.setAttribute('data-clone','after');track.appendChild(c);
+    });
+  }
+
+  let current = spv();
+
+  // dots
+  dotsWrap.innerHTML='';
+  origSlides.forEach((_,i)=>{
+    const d=document.createElement('div');
+    d.className='carousel-dot'+(i===0?' active':'');
+    d.addEventListener('click',()=>{ moveTo(spv()+i, true); });
+    dotsWrap.appendChild(d);
+  });
+
+  function updateUI(){
+    const realIdx = current - spv();
+    dotsWrap.querySelectorAll('.carousel-dot').forEach((d,i)=>d.classList.toggle('active', i===realIdx));
+    if(counterEl) counterEl.textContent = String(realIdx+1).padStart(2,'0')+' / '+String(total).padStart(2,'0');
+  }
+
+  function slideW(){ return track.parentElement.offsetWidth / spv(); }
+
+  function moveTo(idx, animate=true){
+    current = idx;
+    track.style.transition = animate ? 'transform 0.65s cubic-bezier(0.16,1,0.3,1)' : 'none';
+    track.style.transform  = `translateX(-${current * slideW()}px)`;
+    updateUI();
+    if(animate) busy=true;
+  }
+
+  track.addEventListener('transitionend',()=>{
+    busy=false;
+    const s=spv();
+    if(current <= s-1)      moveTo(current+total, false);
+    else if(current >= total+s) moveTo(current-total, false);
+  });
+
+  buildClones();
+  moveTo(spv(), false);
+
+  document.getElementById('prev').addEventListener('click',()=>{ if(!busy) moveTo(current-1); });
+  document.getElementById('next').addEventListener('click',()=>{ if(!busy) moveTo(current+1); });
+
+  let autoTimer = setInterval(()=>{ if(!busy) moveTo(current+1); }, 4800);
+  track.closest('.carousel-outer, section, div').addEventListener('mouseenter',()=>clearInterval(autoTimer));
+  track.closest('.carousel-outer, section, div').addEventListener('mouseleave',()=>{ autoTimer=setInterval(()=>{ if(!busy) moveTo(current+1); },4800); });
+
+  window.addEventListener('resize',()=>{ buildClones(); moveTo(spv(), false); });
+})();
+
+
+// ── INSECT SHOWCASE ──
+function initShowcase(trackId, navId, progressId, interval){
+  const track = document.getElementById(trackId);
+  if(!track) return;
+  const slides = track.querySelectorAll('.insect-slide');
+  const navWrap = document.getElementById(navId);
+  const progressBar = document.getElementById(progressId);
+  let current = 0;
+  let timer, progressTimer, progressVal = 0;
+
+  // build dots
+  slides.forEach((_,i)=>{
+    const d = document.createElement('button');
+    d.className='insect-nav-dot'+(i===0?' active':'');
+    d.setAttribute('aria-label','Go to slide '+(i+1));
+    d.addEventListener('click',()=>{ goTo(i); resetTimer(); });
+    navWrap.appendChild(d);
+  });
+
+  function goTo(idx){
+    slides[current].classList.remove('active');
+    current = (idx + slides.length) % slides.length;
+    track.style.transform = `translateX(-${current * 100}%)`;
+    // re-trigger zoom animation
+    const img = slides[current].querySelector('img');
+    img.style.animation='none';
+    void img.offsetWidth;
+    img.style.animation='';
+    slides[current].classList.add('active');
+    navWrap.querySelectorAll('.insect-nav-dot').forEach((d,i)=>d.classList.toggle('active',i===current));
+    // reset progress
+    progressVal = 0;
+    if(progressBar) progressBar.style.width = '0%';
+  }
+
+  function tick(){
+    progressVal += 100 / (interval / 80);
+    if(progressVal >= 100){
+      progressVal = 0;
+      goTo(current + 1);
+    }
+    if(progressBar) progressBar.style.width = progressVal + '%';
+  }
+
+  function resetTimer(){
+    clearInterval(timer);
+    progressVal = 0;
+    timer = setInterval(tick, 80);
+  }
+
+  // pause on hover
+  track.closest('.insect-showcase').addEventListener('mouseenter',()=>clearInterval(timer));
+  track.closest('.insect-showcase').addEventListener('mouseleave',()=>resetTimer());
+
+  resetTimer();
+}
+
+initShowcase('insectTrack','insectNav','insectProgress', 5500);
+initShowcase('insectTrack2','insectNav2','insectProgress2', 4800);
+
+
+// ── STICKY SCROLL INSECTS ──
+(function(){
+  const section = document.getElementById('stickyInsects');
+  if(!section) return;
+  const inner = section.querySelector('.sticky-insects-inner');
+  const slides = section.querySelectorAll('.si-slide');
+  const texts  = section.querySelectorAll('.si-text-item');
+  const navWrap= document.getElementById('siNav');
+  const total  = slides.length;
+  let currentIdx = -1;
+
+  // build dots
+  for(let i=0;i<total;i++){
+    const b = document.createElement('button');
+    b.className='si-dot'+(i===0?' active':'');
+    b.setAttribute('aria-label','Species '+(i+1));
+    b.addEventListener('click',()=>{
+      const sectionTop = section.getBoundingClientRect().top + window.scrollY;
+      const step = (section.offsetHeight - window.innerHeight) / total;
+      window.scrollTo({top: sectionTop + step * i + 10, behavior:'smooth'});
+    });
+    navWrap.appendChild(b);
+  }
+
+  function activate(idx){
+    if(idx === currentIdx) return;
+    currentIdx = idx;
+    slides.forEach((s,i)=> s.classList.toggle('active', i===idx));
+    texts.forEach((t,i) => t.classList.toggle('active', i===idx));
+    navWrap.querySelectorAll('.si-dot').forEach((d,i)=>d.classList.toggle('active',i===idx));
+    // re-trigger image zoom
+    const img = slides[idx].querySelector('img');
+    img.style.transform='scale(1.04)';img.style.filter='grayscale(20%) brightness(0.35) contrast(1.2) sepia(8%)';
+    requestAnimationFrame(()=>{
+      img.style.transform='';img.style.filter='';
+    });
+  }
+
+  function onScroll(){
+    const rect = section.getBoundingClientRect();
+    const totalScroll = section.offsetHeight - window.innerHeight;
+    if(totalScroll <= 0) return;
+    const scrolled = -rect.top;
+    const progress = Math.max(0, Math.min(1, scrolled / totalScroll));
+    const idx = Math.min(total-1, Math.floor(progress * total));
+    activate(idx);
+  }
+
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+})();
+
+
+
+
+
+// ── NAV SCROLL STATE ──
+(function(){
+  const nav = document.querySelector('.nav');
+  if(!nav) return;
+  window.addEventListener('scroll', ()=>{
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  }, {passive:true});
+})();
+
+// ── SCROLL REVEAL ──
+const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');}),{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+
+</body>
+</html>
